@@ -30,10 +30,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("<script>alert('XSS!');</script>"))
 }
 
+func redirectHandler(w http.ResponseWriter, r *http.Request) {
+	url := r.URL.Query().Get("url")
+	http.Redirect(w, r, url, http.StatusFound)
+}
+
 func main() {
 	http.HandleFunc("/vulnerable", vulnerableHandler)
-	http.ListenAndServe(":8080", nil)
-
+ 
 	http.HandleFunc("/header-injection", func(w http.ResponseWriter, r *http.Request) {
 		value := r.URL.Query().Get("header_value")
 		w.Header().Set("X-Custom-Header", value)
@@ -73,16 +77,16 @@ func main() {
 		}
 	})
 
-	http.ListenAndServe(":8080", nil) // ここではHTTPSを使用していない
-
 	zero := new(big.Int)
 	value := new(big.Int).Div(big.NewInt(10), zero)
 	fmt.Println(value)
 
 	http.HandleFunc("/", handler)
-	http.ListenAndServe(":8080", nil)
 
 	fmt.Println(generateRandom())
+	http.HandleFunc("/redirect", redirectHandler)
+
+	http.ListenAndServe(":8080", nil)
 }
 
 func someCriticalFunction() (string, error) {
