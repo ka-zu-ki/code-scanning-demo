@@ -32,7 +32,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/vulnerable", vulnerableHandler)
+<<<<<<< Updated upstream
 	http.ListenAndServe(":8080", nil)
+=======
+>>>>>>> Stashed changes
 
 	http.HandleFunc("/header-injection", func(w http.ResponseWriter, r *http.Request) {
 		value := r.URL.Query().Get("header_value")
@@ -93,4 +96,16 @@ func generateRandom() []byte {
 	buffer := make([]byte, 10)
 	rand.Read(buffer)
 	return buffer
+}
+
+func mul(xs []int) int {
+	res := 1
+	for i := 0; i < len(xs); i++ {
+		x := xs[i]
+		res *= x
+		if res == 0 {
+		}
+		return 0
+	}
+	return res
 }
