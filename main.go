@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"math/big"
 	"net/http"
+	"regexp"
 )
 
 const apiKey = "SECRET_API_KEY_12345"
@@ -32,10 +33,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/vulnerable", vulnerableHandler)
-<<<<<<< Updated upstream
 	http.ListenAndServe(":8080", nil)
-=======
->>>>>>> Stashed changes
 
 	http.HandleFunc("/header-injection", func(w http.ResponseWriter, r *http.Request) {
 		value := r.URL.Query().Get("header_value")
@@ -83,9 +81,12 @@ func main() {
 	fmt.Println(value)
 
 	http.HandleFunc("/", handler)
-	http.ListenAndServe(":8080", nil)
 
 	fmt.Println(generateRandom())
+	mul([]int{1, 2, 3, 4, 5})
+	broken([]byte("forbidden.host.org"))
+
+	http.ListenAndServe(":8080", nil)
 }
 
 func someCriticalFunction() (string, error) {
@@ -108,4 +109,15 @@ func mul(xs []int) int {
 		return 0
 	}
 	return res
+}
+
+func broken(hostNames []byte) string {
+	var hostRe = regexp.MustCompile("\bforbidden.host.org")
+	if hostRe.Match(hostNames) {
+		return "Must not target forbidden.host.org"
+	} else {
+		// This will be reached even if hostNames is exactly "forbidden.host.org",
+		// because the literal backspace is not matched
+		return ""
+	}
 }
