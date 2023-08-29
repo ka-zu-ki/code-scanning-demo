@@ -32,6 +32,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+
 	http.HandleFunc("/vulnerable", vulnerableHandler)
 	http.ListenAndServe(":8080", nil)
 
