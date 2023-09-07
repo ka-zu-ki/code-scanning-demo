@@ -16,7 +16,7 @@ var db *sql.DB
 
 func vulnerableHandler(w http.ResponseWriter, r *http.Request) {
 	userID := r.URL.Query().Get("user_id")
-
+	
 	// 脆弱なSQLクエリ
 	query := fmt.Sprintf("SELECT * FROM users WHERE id = %s", userID)
 	rows, err := db.Query(query)
