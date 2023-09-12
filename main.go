@@ -16,15 +16,18 @@ var db *sql.DB
 
 func vulnerableHandler(w http.ResponseWriter, r *http.Request) {
 	userID := r.URL.Query().Get("user_id")
-	
+
 	// 脆弱なSQLクエリ
 	query := fmt.Sprintf("SELECT * FROM users WHERE id = %s", userID)
+	query2 := fmt.Sprintf("SELECT * FROM users WHERE id = %s", userID)
 	rows, err := db.Query(query)
+	rows2, err := db.Query(query2)
 	if err != nil {
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
+	defer rows2.Close()
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
